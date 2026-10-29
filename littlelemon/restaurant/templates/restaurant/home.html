@@ -1,0 +1,10 @@
+{% extends "restaurant/base.html" %}
+{% block title %}Little Lemon | Home{% endblock %}
+{% block content %}
+<section class="hero">
+    <p class="eyebrow">WELCOME TO LITTLE LEMON</p>
+    <h1>Good food. Good mood.</h1>
+    <p>Reserve a table and enjoy a fresh, seasonal menu in a welcoming space.</p>
+    <a class="button" href="{% url 'book' %}">Book a table</a>
+</section>
+{% endblock %}

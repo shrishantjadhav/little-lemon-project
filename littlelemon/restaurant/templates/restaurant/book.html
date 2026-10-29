@@ -1,0 +1,49 @@
+{% extends "restaurant/base.html" %}
+{% load static %}
+{% block title %}Book a table | Little Lemon{% endblock %}
+{% block content %}
+<h1>Book a table</h1>
+<p>Choose a date and available time for your reservation.</p>
+
+{% if message %}<p class="notice error">{{ message }}</p>{% endif %}
+{% if form.non_field_errors %}
+    <div class="notice error">{{ form.non_field_errors }}</div>
+{% endif %}
+
+<form method="post" id="booking-form" class="booking-form">
+    {% csrf_token %}
+    <div class="field">
+        <label for="{{ form.first_name.id_for_label }}">First name</label>
+        {{ form.first_name }}
+        {{ form.first_name.errors }}
+    </div>
+    <div class="field">
+        <label for="{{ form.reservation_date.id_for_label }}">Reservation date</label>
+        {{ form.reservation_date }}
+        {{ form.reservation_date.errors }}
+    </div>
+    <div class="field">
+        <label for="{{ form.reservation_slot.id_for_label }}">Reservation slot</label>
+        <select name="reservation_slot" id="id_reservation_slot" required>
+            {% for value, label in time_slots %}
+                <option value="{{ value }}"
+                    {% if value in booked_slots %}disabled{% endif %}
+                    {% if form.reservation_slot.value|stringformat:"s" == value|stringformat:"s" %}selected{% endif %}>
+                    {{ label }}{% if value in booked_slots %} — Booked{% endif %}
+                </option>
+            {% endfor %}
+        </select>
+        {{ form.reservation_slot.errors }}
+    </div>
+    <button class="button" type="submit">Reserve table</button>
+</form>
+
+<section class="reservations-section">
+    <h2>Current reservations</h2>
+    <p id="reservation-status" aria-live="polite">Loading reservations…</p>
+    <ul id="reservation-list" class="reservation-list"></ul>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'restaurant/booking.js' %}" defer></script>
+{% endblock %}
